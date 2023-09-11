@@ -37,7 +37,7 @@ def create_user():
     """Creates a new user"""
     fname = request.form["fname"]
     lname = request.form["lname"]
-    image = request.form["image_url"]
+    image = request.form["image_url"] or None
 
     new_user = User(first_name=fname, last_name=lname, image_url=image)
     db.session.add(new_user)
@@ -60,17 +60,17 @@ def edit_user_form(user_id):
 @app.route("/users/<int:user_id>/edit", methods=["POST"])
 def edit_user(user_id):
     """update user with new info"""
-    fname = request.form["fname"] 
-    lname = request.form["lname"]
-    image = request.form["image_url"]
+    fname = request.form["fname"] or None
+    lname = request.form["lname"] or None
+    image = request.form["image_url"] or None
 
     user = User.query.get_or_404(user_id)
-    if fname:
-        user.first_name = fname
-    if lname:
-        user.last_name = lname
-    if image:
-        user.image_url = image
+    # if fname:
+    #     user.first_name = fname
+    # if lname:
+    #     user.last_name = lname
+    # if image:
+    #     user.image_url = image
 
     db.session.add(user)
     db.session.commit()
