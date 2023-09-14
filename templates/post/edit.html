@@ -11,14 +11,27 @@
             <input type="text" class="form-control" id="title" name="title" value="{{ post.title }}">
         </div>
     </div>
-
+    <br>
     <div class="form-group row">
         <label for="last_name" class="col-sm-2 col-form-label">Post Content</label>
         <div class="col-sm-10">
             <textarea class="form-control" id="content" name="content"
                 value="{{ post.content }}">{{ post.content }}</textarea>
         </div>
-    </div>
+    </div><br>
+    {% if tags %}
+    <div>
+        {% for tag in tags %}
+        {% if tag in post.tags %}
+        <input type="checkbox" checked id="{{tag.id}}" name="tagsChecked" value="{{tag.id}}">
+        <label for="{{tag.id}}">{{tag.name}}</label><br>
+        {% else %}
+        <input type="checkbox" id="{{tag.id}}" name="tagsChecked" value="{{tag.id}}">
+        <label for="{{tag.id}}">{{tag.name}}</label><br>
+        {% endif %}
+        {% endfor %}
+    </div><br>
+    {% endif %}
 
     <div class="form-group text-right">
         <a href="/users/{{post.user_id}}" class="btn btn-outline-info">Cancel</a>

@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from app import app
-from models import db, User, Post
+from models import db, User, Post, Tag, PostTag
 
 # Use test database and don't clutter tests with SQL
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly_test'
@@ -134,3 +134,57 @@ class PostViewsTestCase(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertIn("updatedTitle", html)
             self.assertIn("UpdatedContent2", html)
+
+class TagsViewsTestCase(TestCase):
+    """Tests for views for Tags."""
+
+    def setUp(self):
+        """Add sample tag."""
+        Tag.query.delete()
+        
+        tag = Tag(name="TestTag")
+        db.session.add(tag)
+        db.session.commit()
+
+        self.tag_id = tag.id
+
+    def tearDown(self):
+        """Clean up any fouled transaction."""
+
+        db.session.rollback()
+
+    def test_list_tags(self):
+        with app.test_client() as client:
+            resp = client.get(f"/tags")
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('TestTag', html)
+         
+    def test_show_tag(self):
+        with app.test_client() as client:
+            resp = client.get(f"/tags/{self.tag_id}")
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('TestTag', html)
+           
+    def test_add_tag(self):
+        with app.test_client() as client:
+            d = {"name": "Test Tag 2"}
+            resp = client.post(f"/tags/new", data=d, follow_redirects=True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("Test Tag 2", html)
+           
+
+    def test_edit_tag(self):
+        with app.test_client() as client:
+            d = {"name": "updated Tag"}
+            resp = client.post(f"/tags/{self.tag_id}/edit", data=d, follow_redirects=True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("updated Tag", html)
+         

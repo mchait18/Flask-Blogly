@@ -2,7 +2,7 @@
 {% block title %}New Post Form{% endblock %}
 
 {% block content %}
-<h1>Add Post for {{user.get_full_name()}}</h1>
+<h1>Add Post for {{user.get_full_name}}</h1>
 <form method="POST">
     <div class="form-group row">
         <label for="title" class="col-sm-2 col-form-label">Title</label>
@@ -10,13 +10,21 @@
             <input type='text' class='form-control' name="title" id='title'>
         </div>
     </div>
+    <br>
     <div class="form-group row">
         <label for="content" class="col-sm-2 col-form-label">Content</label>
         <div class="col-sm-10">
             <textarea class="form-control" id="content" name="content"></textarea>
         </div>
-    </div>
-
+    </div><br>
+    {% if tags %}
+    <div>
+        {% for tag in tags %}
+        <input type="checkbox" id="{{tag.id}}" name="tagsChecked" value="{{tag.id}}">
+        <label for="{{tag.id}}">{{tag.name}}</label><br>
+        {% endfor %}
+    </div><br>
+    {% endif %}
     <div class="form-group row">
         <div class="ml-auto mr-3">
             <a href="/users/{{user.id}}" class="btn btn-outline-info">Cancel</a>
