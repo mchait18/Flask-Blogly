@@ -10,8 +10,20 @@
         <div class="col-sm-10">
             <input type="text" class="form-control" id="name" name="name" value="{{ tag.name }}">
         </div>
-    </div>
-
+    </div><br>
+    {% if posts %}
+    <div>
+        {% for post in posts %}
+        {% if post in tag.posts %}
+        <input type="checkbox" checked id="{{post.id}}" name="posts" value="{{post.id}}">
+        <label for="{{post.id}}">{{post.title}}</label><br>
+        {% else %}
+        <input type="checkbox" id="{{post.id}}" name="posts" value="{{post.id}}">
+        <label for="{{post.id}}">{{post.title}}</label><br>
+        {% endif %}
+        {% endfor %}
+    </div><br>
+    {% endif %}
     <div class="form-group text-right">
         <a href="/tags/{{tag.id}}" class="btn btn-outline-info">Cancel</a>
         <button type="submit" class="btn btn-success">Save</button>
